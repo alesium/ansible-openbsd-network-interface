@@ -1,7 +1,7 @@
 - name: copy hostname.if files
   tags: openbsd-network-interface
   template:
-    src: {{ openbsd_network_interface_hostname_if_src }}"
+    src: "{{ openbsd_network_interface_hostname_if_src }}"
     dest: "{{ openbsd_network_interface_hostname_if_dest }}"
     mode: "0600"
     owner: "root"
