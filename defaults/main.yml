@@ -1,0 +1,4 @@
+openbsd_network_interface: "em0"
+openbsd_network_interface_force_restart: "false"
+openbsd_network_interface_hostname_if_src: "hostname.if.j2"
+openbsd_network_interface_hostname_if_dest: "/etc/hostname.{{ openbsd_network_interface }}"

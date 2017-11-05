@@ -1,0 +1,2 @@
+- name: restart interface
+  shell: sh /etc/netstart "{{ openbsd_network_interface }}"

@@ -1,0 +1,11 @@
+- name: copy hostname.if files
+  tags: openbsd-network-interface
+  template:
+    src: {{ openbsd_network_interface_hostname_if_src }}"
+    dest: "{{ openbsd_network_interface_hostname_if_dest }}"
+    mode: "0600"
+    owner: "root"
+    group: "bin"
+  notify: restart interface
+  when: (hostvars[inventory_hostname]['ansible_'+openbsd_network_interface].status != "active") or
+        (openbsd_network_interface_force_restart == "true")
