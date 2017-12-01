@@ -1,11 +1,17 @@
-- name: copy hostname.if files
-  tags: openbsd-network-interface
-  template:
-    src: "{{ openbsd_network_interface_hostname_if_src }}"
-    dest: "{{ openbsd_network_interface_hostname_if_dest }}"
-    mode: "0600"
-    owner: "root"
-    group: "bin"
-  notify: restart interface
-  when: (hostvars[inventory_hostname]['ansible_'+openbsd_network_interface].status != "active") or
-        (openbsd_network_interface_force_restart == "true")
+---
+  - name: test if the interface exist
+    shell: "ifconfig {{ openbsd_network_interface }}"
+    register: interface_test
+    ignore_errors: true
+
+  - name: copy hostname.if files
+    tags: openbsd-network-interface
+    template:
+      src: "{{ openbsd_network_interface_hostname_if_src }}"
+      dest: "{{ openbsd_network_interface_hostname_if_dest }}"
+      mode: "0600"
+      owner: "root"
+      group: "bin"
+    notify: restart interface
+    when: (interface_test.rc == 1) or
+          (openbsd_network_interface_force_restart == "true")
