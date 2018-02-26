@@ -1,17 +1,24 @@
 ---
   - name: test if the interface exist
     shell: "ifconfig {{ openbsd_network_interface }}"
-    register: interface_test
+    tags: openbsd-network-interface
+    register: openbsd_network_interface_if_test
     ignore_errors: true
 
   - name: copy hostname.if files
     tags: openbsd-network-interface
     template:
       src: "{{ openbsd_network_interface_hostname_if_src }}"
-      dest: "{{ openbsd_network_interface_hostname_if_dest }}"
+      dest: "{{ openbsd_network_interface_if_test }}"
       mode: "0600"
       owner: "root"
       group: "bin"
     notify: restart interface
-    when: (interface_test.rc == 1) or
+    when: (openbsd_network_interface_if_test.rc == 1) or
           (openbsd_network_interface_force_restart == "true")
+    register: openbsd_network_interface_if_copy
+
+  - name: restart interface
+    shell: sh /etc/netstart "{{ openbsd_network_interface }}"
+    tags: openbsd-network-interface
+    when: openbsd_network_interface_if_copy.changed
