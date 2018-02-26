@@ -7,16 +7,16 @@
 
   - name: copy hostname.if files
     tags: openbsd-network-interface
+    register: openbsd_network_interface_if_copy
     template:
       src: "{{ openbsd_network_interface_hostname_if_src }}"
-      dest: "{{ openbsd_network_interface_if_test }}"
+      dest: "{{ openbsd_network_interface_hostname_if_dest }}"
       mode: "0600"
       owner: "root"
       group: "bin"
-    notify: restart interface
     when: (openbsd_network_interface_if_test.rc == 1) or
           (openbsd_network_interface_force_restart == "true")
-    register: openbsd_network_interface_if_copy
+
 
   - name: restart interface
     shell: sh /etc/netstart "{{ openbsd_network_interface }}"
